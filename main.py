@@ -1,6 +1,7 @@
 from openpyxl import load_workbook
 
 import consts
+import csharp_const_template
 import go_const_template
 
 
@@ -19,7 +20,31 @@ class Parse:
         self.parse()
 
         self.gen_server_const_code()
+        self.gen_client_const_code()
+    def gen_client_const_code(self):
+        content = ""
+        for data in self.data_list:
+            desc_name = data.desc_name
+            field_value = data.field_value
+            field_name = data.field_name[0].upper() + data.field_name[1:]
+            field_type = data.field_type
 
+            if field_type == "uint32":
+                field_type = "UInt32"
+            elif field_type == "int32":
+                field_type = "Int32"
+            elif field_type == "str" or field_type == "string":
+                field_type = "string"
+
+            code = f"public const {field_type} {field_name} = {field_value}; // {desc_name}"
+
+            content += code
+
+        with open(consts.client_output_dist, "w", encoding="utf-8") as f:
+            file_content = csharp_const_template.csharp_template
+            file_content = file_content.replace(csharp_const_template.csharp_content_replace, content)
+
+            f.write(file_content)
     def gen_server_const_code(self):
         content = ""
         for data in self.data_list:
