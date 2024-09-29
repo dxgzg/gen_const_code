@@ -83,10 +83,12 @@ class Parse:
             self.data_list.append(data)
             # print(data)
 
-
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
+def gen_const_proc():
     print("start run gen const code")
     parse = Parse()
     parse.proc_main()
     print("end run gen const code")
+
+# Press the green button in the gutter to run the script.
+if __name__ == '__main__':
+    gen_const_proc()
